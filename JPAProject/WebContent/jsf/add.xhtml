@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ui:composition template="/jsf/main.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"      
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:a4j="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"> 
+    
+    <ui:define name="windowTitle">
+    	#{msgs.add_title}
+    </ui:define> 
+    
+    <ui:define name="content">
+    	<h:outputScript library="js" name="control_edit.js" target="head"/>
+    	<h:outputStylesheet library="css" name="addStyle.css"/>
+    	<h:form id="addForm" styleClass="addBox">
+    		<p><h:message styleClass="messageResult" for="addForm" style="color:red"/></p>
+	    	<h3>#{msgs.add_header}</h3>
+	      	<p>#{msgs.profile_full_name}<br/><h:inputText required="true" id="usernameAdd" requiredMessage=" #{msgs.message_empty_field}" value="#{recordBean.record.fullName}"  validatorMessage=" #{msgs.message_wrong_username}" >
+	      		<f:validateLength minimum="3"/>
+	      		<f:validateRegex pattern="^[ a-zA-Zа-яА-ЯёЁ]+$"/>
+	      	</h:inputText>
+	      	<h:message for="usernameAdd" style="color:red"/></p>
+	      	<p>#{msgs.profile_address}<br/><h:inputText id="addressAdd" required="true" requiredMessage=" #{msgs.message_empty_field}" value="#{recordBean.record.address}" validatorMessage=" #{msgs.message_wrong_address}">
+	      		<f:validateLength minimum="2"/>
+	      		<f:validateRegex pattern="^[ \wа-яА-ЯёЁ\.\,\-]*$"/>
+	      	</h:inputText>
+	      	<h:message for="addressAdd" style="color:red"/></p>
+	      	<p>#{msgs.profile_telephone}<br/><h:inputText id="phoneAdd" required="true" requiredMessage=" #{msgs.message_empty_field}" value="#{recordBean.record.phoneNumber}" validatorMessage=" #{msgs.message_wrong_telephone}">
+	      		<f:validateLength minimum="2"/>
+	      		<f:validateRegex pattern="^\+?\d+$"/>
+	      	</h:inputText>
+	      	<h:message for="phoneAdd" style="color:red"/></p>
+	      	<p>#{msgs.profile_mail}<br/><h:inputText id="mailAdd" required="true" requiredMessage=" #{msgs.message_empty_field}" value="#{recordBean.record.mail}" validatorMessage=" #{msgs.message_wrong_mail}">
+	      		<f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$"/>
+	      	</h:inputText>
+	      	<h:message for="mailAdd" style="color:red"/></p>
+	      	<p>#{msgs.profile_birthdate}<br/><rich:calendar id="calendarAdd" required="true" requiredMessage=" #{msgs.message_empty_field}" cellWidth="24px" cellHeight="22px" popupStyle="width:200px" locale="#{sessionInformation.currentLocale}" datePattern="yyyy-MM-dd" value="#{recordBean.record.birthDate}"/>
+	      	<h:message for="calendarAdd" style="color:red"/></p>
+	      	<p>#{msgs.profile_photo}<rich:fileUpload immediateUpload="true" id="fileUploadId"  fileUploadListener="#{recordBean.addImage}" listHeight="100%" acceptedTypes="jpg, gif, png, bmp" maxFileSize="2000000"/></p>
+	      	<p><h:commandButton value="#{msgs.add_button}" action="#{recordBean.addRecord}"/> </p>
+    	</h:form>
+    </ui:define>
+    
+</ui:composition>

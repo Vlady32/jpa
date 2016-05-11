@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"      
+      xmlns:h="http://java.sun.com/jsf/html">
+      <h:outputScript library="js" name="regSuccess.js" target="head"/>
+      <h:head>
+      	<title>#{msgs.reg_suc_title}</title>
+      </h:head>
+      <h:body>
+      	<h3><h:outputText value="#{msgs.reg_suc_message}"></h:outputText></h3>
+      	<p>#{msgs.reg_suc_enter}<h:link value="#{msgs.link}" outcome="login.jsf" /></p>
+      </h:body>
+</html>
+

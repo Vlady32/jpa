@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"      
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+      <h:head>
+      	<title><ui:insert name="windowTitle"/></title>
+      	<h:outputStylesheet library="css" name="mainStyle.css"/>
+      	<h:outputScript library="js" name="jquery-2.2.2.min.js" target="head"/>
+      </h:head>
+      <h:body>
+      	<div id="header">
+      		<p id="firstP">#{msgs.main_name_phonebook}</p>
+      		<p id="secondP">
+				<h:outputFormat value="#{msgs.main_welcome}">
+      				<f:param value="#{sessionInformation.userName}"/>
+      			</h:outputFormat>
+			</p>
+      		<h:form id="logOut"><h:commandLink action="#{userBean.logOut}" value="#{msgs.main_exit}"/></h:form>
+      	</div>
+      	<div id="content">
+      		<div id="nav">
+      			<h:form id="itemsMenu">
+      				<ui:repeat var="item" value="#{subBean.listItemsMenu}" varStatus="point">
+      					<p><h:commandLink value="#{item}" action="#{subBean.determineAction}">
+      						<f:param name="link" value="#{item}"/>
+      					</h:commandLink></p>
+      				</ui:repeat>
+				</h:form>
+      		</div>
+      		<div id="workplace">
+      			<ui:insert name="content"/>
+      		</div>
+      		<div id="hfooter"></div>
+      	</div>
+      	<div id="footer">
+      		<span><h:outputText value="#{msgs.main_footer} &#169; 2016"/></span>
+      	</div>
+      </h:body>
+</html>
+

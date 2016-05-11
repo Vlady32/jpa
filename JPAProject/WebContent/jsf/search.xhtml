@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ui:composition template="/jsf/main.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"      
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:a4j="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"> 
+    
+    <ui:define name="windowTitle">
+    	#{msgs.search_title}
+    </ui:define> 
+    
+    <ui:define name="content">
+    	<h:outputStylesheet library="css" name="searchStyle.css"/>
+	    <h:form id="searchForm">
+	    	<h:inputText id="searchPhrase" required="true" value="#{recordBean.searchPhrase}"/>
+	    	<h:commandButton value="#{msgs.search_button}" action="#{recordBean.searchRecord}" />
+	    </h:form>
+	    <h:form><p><h:messages style="color:red" /></p></h:form>
+	    <h:panelGroup id="dataTable">
+		    <h:dataTable id="searchTable" binding="#{tableSearch}" value="#{recordBean.searchedRecords}" var="record" styleClass="#{recordBean.searchedRecords.size() > 0 ? '' : 'hidden'}">
+		    	<h:column>
+		    		<f:facet name="header">#{msgs.view_header_number}</f:facet>
+		    		<h:form>
+		    			<h:commandLink value="#{tableSearch.rowIndex + 1}">       
+		    				<a4j:ajax render="popupWindowSearch" oncomplete="#{rich:component('popupWindowSearch')}.show()"/>
+		    				<f:setPropertyActionListener target="#{recordBean.record}" value="#{record}"/>
+						</h:commandLink>
+		    		</h:form>
+		    	</h:column>
+		    	<h:column>
+		    		<f:facet name="header">#{msgs.view_header_full_name}</f:facet>
+		    		#{record.fullName}
+		    	</h:column>
+		    	<h:column>
+		    		<f:facet name="header">#{msgs.view_header_address}</f:facet>
+		    		#{record.address}
+		    	</h:column>
+		    	<h:column>
+		    		<f:facet name="header">#{msgs.view_header_telephone}</f:facet>
+		    		#{record.phoneNumber}
+		    	</h:column>
+		    </h:dataTable>
+		</h:panelGroup>
+	    <rich:popupPanel autosized="true" id="popupWindowSearch" modal="true" onmaskclick="#{rich:component('popupWindowSearch')}.hide()">
+	  		<f:facet name="header">
+	  			<h:outputText styleClass="bold" value="#{msgs.profile_header}"/>
+	    		<h:outputText value="#{recordBean.record.fullName}"/>
+	  		</f:facet>
+	  		<f:facet name="controls">
+	  			<h:outputText value="X" onclick="#{rich:component('popupWindowSearch')}.hide(); return false;" style="cursor:pointer; font-size:16px"/>
+	        </f:facet>
+	        <p id="imageProfile"><h:graphicImage url="data:image/jpg;base64,${recordBean.getImage()}" alt="${recordBean.record.fullName}" style="width: 150px; height: 200px;"/></p>
+	  		<h:form>
+	  			<p><h:outputText styleClass="bold" value="#{msgs.profile_full_name}"/>
+	    		<h:outputText value="#{recordBean.record.fullName}"/></p>
+	  			<p><h:outputText styleClass="bold" value="#{msgs.profile_address}"/>
+	    		<h:outputText value="#{recordBean.record.address}"/></p>
+	  			<p><h:outputText styleClass="bold" value="#{msgs.profile_telephone}"/>
+	    		<h:outputText value="#{recordBean.record.phoneNumber}"/></p>
+	  			<p><h:outputText styleClass="bold" value="#{msgs.profile_date_creation}"/>
+	    		<h:outputText value="#{recordBean.record.creationDate}"/></p>
+	  			<p><h:outputText styleClass="bold" value="#{msgs.profile_mail}"/>
+	    		<h:outputText value="#{recordBean.record.mail}"/></p>
+	  			<p><h:outputText styleClass="bold" value="#{msgs.profile_birthdate}"/>
+	    		<h:outputText value="#{recordBean.record.birthDate}"/></p>
+	  		</h:form>     
+		</rich:popupPanel>
+    </ui:define>
+    
+</ui:composition>

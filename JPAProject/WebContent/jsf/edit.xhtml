@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ui:composition template="/jsf/main.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"      
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:a4j="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"> 
+    
+    <ui:define name="windowTitle">
+    	#{msgs.edit_title}
+    </ui:define> 
+    
+    <ui:define name="content">
+    	<h:outputScript library="js" name="control_edit.js" target="head"/>
+    	<h:outputStylesheet library="font-awesome" name="css/font-awesome.css"/>
+    	<h:form><p><h:messages styleClass="messageResult" style="color:red" /></p></h:form>
+	    <table>
+	    	<tr> 
+				<th>#{msgs.view_header_number}</th>
+				<th>#{msgs.view_header_full_name}</th>
+				<th>#{msgs.view_header_address}</th>
+				<th>#{msgs.view_header_telephone}</th>
+				<th class="withoutBorder"></th>
+			</tr>
+	    	<ui:repeat var="recordEdit" value="#{recordBean.listRecords}" varStatus="status">
+	    		<tr class="editTr">
+	    			<td>#{(recordBean.currentPage - 1)*30 + status.index + 1}</td>
+					<td>#{recordEdit.fullName}</td>
+					<td>#{recordEdit.address}</td>
+					<td>#{recordEdit.phoneNumber}</td>
+					<td class="withoutBorder tools hidden">
+						<h:form>
+	    					<h:commandLink style="text-decoration: none">      
+	    						<i class="fa fa-pencil-square-o editIcon"></i> 
+	    						<a4j:ajax render="popupWindowEdit" oncomplete="#{rich:component('popupWindowEdit')}.show()"/>
+	    						<f:setPropertyActionListener target="#{recordBean.record}" value="#{recordEdit}"/>
+							</h:commandLink>
+							<h:commandLink style="text-decoration: none" action="#{recordBean.deleteRecord(recordEdit)}" onclick="if (! confirm('#{msgs.edit_confirm}')) return false">      
+	    						<i class="fa fa-times removeIcon"></i>
+							</h:commandLink>
+	    				</h:form>
+	    			</td>
+	    		</tr>
+	    	</ui:repeat>
+	    </table>
+	    <h:panelGroup layout="block" id="navPagesEdit"> 
+	    	<h:form>
+	    		<ui:repeat var="i" value="#{recordBean.valuesPages}">
+	    			<h:commandLink styleClass="#{recordBean.currentPage eq i ? 'noStyle' : ''}" value="#{i}" action="#{recordBean.updatePage}">
+	    				<f:param name="page" value="#{i}"/>
+	    			</h:commandLink>
+	    			<h:outputText value=" "/>
+				</ui:repeat>
+			</h:form>
+	    </h:panelGroup>
+	    <rich:popupPanel autosized="true" id="popupWindowEdit" modal="true" onmaskclick="#{rich:component('popupWindowEdit')}.hide()">
+	  		<f:facet name="header">
+	  			<h:outputText styleClass="bold" value="#{msgs.profile_header}"/>
+	    		<h:outputText value="#{recordBean.record.fullName}"/>
+	  		</f:facet>
+	  		<f:facet name="controls">
+	  			<h:outputText value="X" onclick="#{rich:component('popupWindowEdit')}.hide(); return false;" style="cursor:pointer; font-size:16px"/>
+	        </f:facet>
+	        <p id="imageProfile"><h:graphicImage url="data:image/jpg;base64,${recordBean.getImage()}" alt="${recordBean.record.fullName}" style="width: 150px; height: 200px;"/></p>
+	  		<h:form>
+	  			<p><h:outputText styleClass="bold" value="#{msgs.profile_full_name}"/>
+	    		<h:inputText required="true" id="usernameEdit" requiredMessage=" #{msgs.message_empty_field}" value="#{recordBean.record.fullName}"  validatorMessage=" #{msgs.message_wrong_username}" >
+	      			<f:validateLength minimum="3"/>
+	      			<f:validateRegex pattern="^[ a-zA-Zа-яА-ЯёЁ]+$"/>
+	      		</h:inputText>
+	      		<h:message for="usernameEdit" style="color:red"/></p>
+	  			<p><h:outputText styleClass="bold" value="#{msgs.profile_address}"/>
+	    		<h:inputText id="addressEdit" required="true" requiredMessage=" #{msgs.message_empty_field}" value="#{recordBean.record.address}" validatorMessage=" #{msgs.message_wrong_address}">
+	      			<f:validateLength minimum="2"/>
+	      			<f:validateRegex pattern="^[ \wа-яА-ЯёЁ\.\,\-]*$"/>
+	      		</h:inputText>
+	      		<h:message for="addressEdit" style="color:red"/>
+	    		</p>
+	  			<p><h:outputText styleClass="bold" value="#{msgs.profile_telephone}"/>
+	    		<h:inputText id="phoneEdit" required="true" requiredMessage=" #{msgs.message_empty_field}" value="#{recordBean.record.phoneNumber}" validatorMessage=" #{msgs.message_wrong_telephone}">
+	      			<f:validateLength minimum="2"/>
+	      			<f:validateRegex pattern="^\+?\d+$"/>
+	      		</h:inputText>
+	      		<h:message for="phoneEdit" style="color:red"/>
+	    		</p>
+	  			<p><h:outputText styleClass="bold" value="#{msgs.profile_mail}"/>
+	    		<h:inputText id="mailEdit" value="#{recordBean.record.mail}" validatorMessage=" #{msgs.message_wrong_mail}">
+	      			<f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$"/>
+	      		</h:inputText>
+	      		<h:message for="mailEdit" style="color:red"/>
+	    		</p>
+	  			<p><h:outputText styleClass="bold" value="#{msgs.profile_birthdate}"/>
+	  			<rich:calendar required="true" cellWidth="24px" cellHeight="22px" popupStyle="width:200px" locale="#{sessionInformation.currentLocale}" datePattern="yyyy-MM-dd" value="#{recordBean.record.birthDate}"/></p>
+	  			<p><h:outputText styleClass="bold" value="#{msgs.profile_photo}"/>
+	  			<rich:fileUpload immediateUpload="true" id="fileUploadId"  fileUploadListener="#{recordBean.addImage}" listHeight="100%" acceptedTypes="jpg, gif, png, bmp" maxFileSize="2000000"/></p>
+	  			<p><h:commandButton value="#{msgs.edit_button}" action="#{recordBean.changeRecord}"/> </p>
+	  		</h:form>     
+		</rich:popupPanel>
+    </ui:define>
+</ui:composition>

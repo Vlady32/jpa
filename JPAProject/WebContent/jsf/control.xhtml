@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ui:composition template="/jsf/main.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"      
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:a4j="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"> 
+    
+    <ui:define name="windowTitle">
+    	#{msgs.control_title}
+    </ui:define> 
+    
+    <ui:define name="content">
+    	<h:outputStylesheet library="font-awesome" name="css/font-awesome.css"/>
+    	<h:outputScript library="js" name="control_edit.js" target="head"/>
+    	<h:form><p><h:messages styleClass="messageResult" style="color:red" /></p></h:form>
+	    <table id="controlTable">
+	    	<caption style="font-size: 17px; font-weight:bold">#{msgs.control_caption}</caption>
+	    	<tr> 
+				<th>#{msgs.view_header_number}</th>
+				<th>#{msgs.control_header_name}</th>
+				<th>#{msgs.control_header_type}</th>
+				<th class="withoutBorder"></th>
+			</tr>
+	    	<ui:repeat var="userControl" value="#{userBean.listUsers}" varStatus="status">
+	    		<tr>
+	    			<td>#{status.index + 1}</td>
+					<td>#{userControl.userName}</td>
+					<td>#{userControl.type}</td>
+					<td class="withoutBorder tools hidden">
+						<h:form>
+							<h:commandLink style="text-decoration: none" action="#{userBean.deleteUser(userControl)}" onclick="if (! confirm('#{msgs.delete_confirm}')) return false">      
+	    						<i class="fa fa-times removeIcon"></i>
+							</h:commandLink>
+	    				</h:form>
+	    			</td>
+	    		</tr>
+	    	</ui:repeat>
+	    </table>	
+    </ui:define>
+    
+</ui:composition>

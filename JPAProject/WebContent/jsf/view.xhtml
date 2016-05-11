@@ -1,0 +1,72 @@
+<ui:composition template="/jsf/main.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"      
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:a4j="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"> 
+    
+    <ui:define name="windowTitle">
+    	#{msgs.view_title}
+    </ui:define> 
+    
+    <ui:define name="content">
+    	<br/>
+    	<table>
+	    	<tr> 
+				<th>#{msgs.view_header_number}</th>
+				<th>#{msgs.view_header_full_name}</th>
+				<th>#{msgs.view_header_address}</th>
+				<th>#{msgs.view_header_telephone}</th>
+			</tr>
+		    	<ui:repeat var="recordItem" value="#{recordBean.listRecords}" varStatus="itemNum">
+		    		<tr class="editTr">
+		    			<td><h:form>
+		    				<h:commandLink value="#{(recordBean.currentPage - 1)*30 + itemNum.index + 1}">
+			    				<a4j:ajax render="popupWindow" oncomplete="#{rich:component('popupWindow')}.show()"/>
+			    				<f:setPropertyActionListener target="#{recordBean.currentRecord}" value="#{recordItem}"/>
+			    			</h:commandLink>
+		    			</h:form></td>
+						<td>#{recordItem.fullName}</td>
+						<td>#{recordItem.address}</td>
+						<td>#{recordItem.phoneNumber}</td>
+		    		</tr>
+		    	</ui:repeat>
+    	</table>
+    	<h:form><p><h:messages style="color:red" /></p></h:form>
+    	<h:panelGroup layout="block" id="navPages"> 
+	    	<h:form>
+	    		<ui:repeat var="i" value="#{recordBean.valuesPages}">
+	    			<h:commandLink styleClass="#{recordBean.currentPage eq i ? 'noStyle' : ''}" value="#{i}" action="#{recordBean.updatePage}">
+	    				<f:param name="page" value="#{i}"/>
+	    			</h:commandLink>
+	    			<h:outputText value=" "/>
+				</ui:repeat>
+			</h:form>
+    	</h:panelGroup>
+    	<rich:popupPanel domElementAttachment="form" autosized="true" id="popupWindow" modal="true" onmaskclick="#{rich:component('popupWindow')}.hide()">
+	  		<f:facet name="header">
+	  			<h:outputText styleClass="bold" value="#{msgs.profile_header}"/>
+	    		<h:outputText value="#{recordBean.currentRecord.fullName}"/>
+	  		</f:facet>
+	  		<f:facet name="controls">
+	  			<h:outputText value="X" onclick="#{rich:component('popupWindow')}.hide(); return false;" style="cursor:pointer; font-size:16px"/>
+	        </f:facet>
+	        <p id="imageProfile"><h:graphicImage url="data:image/jpg;base64,${recordBean.getImage()}" alt="${recordBean.currentRecord.fullName}" style="width: 150px; height: 200px;"/></p>
+	  		<h:form>
+	  			<p><h:outputText styleClass="bold" value="#{msgs.profile_full_name}"/>
+	    		<h:outputText value="#{recordBean.currentRecord.fullName}"/></p>
+	  			<p><h:outputText styleClass="bold" value="#{msgs.profile_address}"/>
+	    		<h:outputText value="#{recordBean.currentRecord.address}"/></p>
+	  			<p><h:outputText styleClass="bold" value="#{msgs.profile_telephone}"/>
+	    		<h:outputText value="#{recordBean.currentRecord.phoneNumber}"/></p>
+	  			<p><h:outputText styleClass="bold" value="#{msgs.profile_date_creation}"/>
+	    		<h:outputText value="#{recordBean.currentRecord.creationDate}"/></p>
+	  			<p><h:outputText styleClass="bold" value="#{msgs.profile_mail}"/>
+	    		<h:outputText value="#{recordBean.currentRecord.mail}"/></p>
+	  			<p><h:outputText styleClass="bold" value="#{msgs.profile_birthdate}"/>
+	    		<h:outputText value="#{recordBean.currentRecord.birthDate}"/></p>
+	  		</h:form>     
+		</rich:popupPanel>	
+    </ui:define>
+</ui:composition>

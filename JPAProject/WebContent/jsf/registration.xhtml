@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"      
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+      <h:head>
+      	<title>#{msgs.reg_title}</title>
+      	<h:outputStylesheet library="css" name="regStyle.css"/>
+      </h:head>
+      <h:body>
+      	<h:form id="registrationForm" styleClass="regBox">
+      		<p class="headerReg">#{msgs.reg_header}</p>
+      		<p><h:inputText id="login" required="true" value="#{userBean.user.userName}" requiredMessage=" #{msgs.message_empty_field}" />
+      		<br/><h:message for="login" style="color:red"/></p>
+      		<p:watermark  for="login" value="#{msgs.reg_login}"/>
+      		<p><h:inputSecret id="password" required="true" value="#{userBean.user.password}" requiredMessage=" #{msgs.message_empty_field}"/>
+      		<br/><h:message for="password" style="color:red"/></p>
+      		<p:watermark for="password" value="#{msgs.reg_password}"/>
+      		<p><h:inputSecret id="confirmPassword" required="true" value="#{userBean.user.confirmedPassword}" requiredMessage=" #{msgs.message_empty_field}"/>
+      		<br/><h:message for="confirmPassword" style="color:red"/></p>
+      		<p:watermark for="confirmPassword" value="#{msgs.reg_conf_pass}"/>
+      		<p><h:commandButton id="sendButtonReg" value="#{msgs.reg_button_create}" action="#{userBean.register}"/></p>
+      	</h:form>
+      </h:body>
+</html>
+
